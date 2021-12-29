@@ -783,18 +783,8 @@ workflows:
             - Build docker image
 
       # build and release electron app (dev)
-      - dev-build-approve:
-          name: Build dev app
-          type: approval
-          requires:
-            - UTest - UI
-            - UTest - API
-            - ITest - Final coverage
-          <<: *devFilter
       - setup-sign-certificates:
           name: Setup sign certificates (dev)
-          requires:
-            - Build dev app
           <<: *devFilter
       - setup-build:
           name: Setup build (dev)
