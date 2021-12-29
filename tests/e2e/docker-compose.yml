@@ -48,3 +48,4 @@ services:
       - sys_resource
     ports:
       - 8300:9443
+      - 12000:12000
