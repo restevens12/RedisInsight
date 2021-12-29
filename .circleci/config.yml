@@ -284,7 +284,9 @@ jobs:
           at: .
       - run:
           command: |
-            release/*.AppImage --appimage-mount >> apppath &
+            cd tests/e2e
+            yarn install
+            ../../release/*.AppImage --appimage-mount >> apppath &
             COMMON_URL=$(tail -n 1 apppath)/resources/app.asar/index.html \
             ELECTRON_PATH=$(tail -n 1 apppath)/redisinsight \
             yarn test:desktop
