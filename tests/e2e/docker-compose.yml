@@ -1,41 +1,23 @@
 version: "3.4"
 
 services:
-  e2e:
-    build:
-      context: .
-      dockerfile: e2e.Dockerfile
-    tty: true
-    volumes:
-      - ./results:/usr/src/app/results
-    env_file:
-      - ./.env
-    entrypoint: [
-        './wait-for-it.sh', 'redis-enterprise:12000', '-s', '-t', '120',
-        '--',
-        'npx', 'yarn', 'test:chrome:ci'
-    ]
-
-  # Redisinsight API + UI build
-  app:
-    cap_add:
-      - ipc_lock
-    build:
-      context: ./../../
-      dockerfile: Dockerfile
-    ports:
-      - 5000:5000
   # oss standalone
   oss-standalone:
     image: redislabs/redismod
+    ports:
+      - 8100:6379
 
   # oss standalone v5
   oss-standalone-v5:
     image: redis:5
+    ports:
+      - 8101:6379
 
   # oss standalone redisearch
   oss-standalone-redisearch:
     image: redislabs/redisearch:edge
+    ports:
+      - 8102:6379
 
   # oss sentinel
   oss-sentinel:
@@ -43,6 +25,8 @@ services:
     depends_on:
       - oss-sentinel-primary-1
       - oss-sentinel-primary-2
+    ports:
+      - 28100:6379
   oss-sentinel-primary-1:
     image: redis:5
 
@@ -54,9 +38,13 @@ services:
     image: rdbtools/redis-cluster-modules
     networks:
       - default
+    ports:
+      - 8200:6379
 
   # redis enterprise
   redis-enterprise:
     build: ./rte/redis-enterprise
     cap_add:
       - sys_resource
+    ports:
+      - 8300:9443

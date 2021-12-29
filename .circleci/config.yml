@@ -97,6 +97,7 @@ aliases:
       branches:
         only:
           - main
+          - /^e2e.*/
   stage-filter: &stageFilter
     filters:
       branches:
@@ -274,6 +275,19 @@ jobs:
             sudo cp -a ./redisinsight/api/. /usr/src/app/
             sudo cp -R /tmp/itest/coverages /usr/src/app && sudo chmod 777 -R /usr/src/app
             cd /usr/src/app && npx nyc report -t ./coverages -r text -r text-summary
+  e2e-linux:
+    docker:
+      - image: circleci/node:15.14.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          command: |
+            release/*.AppImage --appimage-mount >> apppath &
+            COMMON_URL=$(tail -n 1 apppath)/resources/app.asar/index.html \
+            ELECTRON_PATH=$(tail -n 1 apppath)/redisinsight \
+            yarn test:desktop
   e2e-tests:
     executor: linux-executor
     parameters:
@@ -793,6 +807,9 @@ workflows:
           requires: &stageElectronBuildRequires
             - Setup build (dev)
           <<: *devFilter
+      - e2e-linux:
+          requires:
+            - Build app - Linux (dev)
       - macosx:
           name: Build app - MacOS (dev)
           requires: *stageElectronBuildRequires
