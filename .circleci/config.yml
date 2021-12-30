@@ -287,8 +287,7 @@ jobs:
             yarn install
             ../../release/*.AppImage --appimage-mount >> apppath &
             docker-compose up -d --force-recreate
-            ./wait-for-it.sh localhost:12000 -s -t 120
-            sleep 5
+            ./wait-for-redis.sh localhost:12000
             COMMON_URL=$(tail -n 1 apppath)/resources/app.asar/index.html \
             ELECTRON_PATH=$(tail -n 1 apppath)/redisinsight \
             yarn test:desktop
