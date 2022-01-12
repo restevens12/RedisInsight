@@ -28,7 +28,7 @@ fixture `Autocomplete for entered commands`
         //Go to Workbench page
         await t.click(myRedisDatabasePage.workbenchButton);
     })
-test('Verify that user can select a command from the list with auto-suggestions when type in any character in the Editor', async t => {
+test.only('Verify that user can select a command from the list with auto-suggestions when type in any character in the Editor', async t => {
     //Start type characters and select command
     await t.typeText(workbenchPage.queryInput, 'AC', { replace: true });
     //Verify that the list with auto-suggestions is displayed
@@ -36,7 +36,7 @@ test('Verify that user can select a command from the list with auto-suggestions 
     //Select command and check result
     await t.pressKey('enter');
     const script = await workbenchPage.queryInputScriptArea.textContent;
-    await t.expect(script.replace(/\s/g, ' ')).eql('ACL CAT ', 'Result of sent command exists');
+    await t.expect(script.replace(/\s/g, ' ')).eql('ACL ', 'Result of sent command exists');
 });
 test('Verify that when user have selected a command (via “Enter” from the list of auto-suggested commands), user can see the required arguments inserted to the Editor', async t => {
     const command = 'LINDEX'

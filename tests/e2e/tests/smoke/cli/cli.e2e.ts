@@ -73,7 +73,8 @@ test('Verify that user can use blocking command', async t => {
     //Verify that user input is blocked
     await t.expect(cliPage.cliCommandInput.exists).notOk('Cli input is not shown');
 });
-test('Verify that user can use unblocking command', async t => {
+//skipped due the Multi-window mode is supported in Chrome, Chromium, Edge 84+ and Firefox only
+test.skip('Verify that user can use unblocking command', async t => {
     await myRedisDatabasePage.clickOnDBByName(ossStandaloneConfig.databaseName);
     //Open CLI
     await t.click(cliPage.cliExpandButton);

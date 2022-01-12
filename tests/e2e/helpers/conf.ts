@@ -1,5 +1,6 @@
 // Urls for using in the tests
 export const commonUrl = process.env.COMMON_URL || 'http://localhost:8080';
+export const commonApiUrl = process.env.COMMON_URL || 'https://localhost:5001';
 
 export const ossStandaloneConfig = {
     host: process.env.OSS_STANDALONE_HOST || 'localhost',

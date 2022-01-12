@@ -1,7 +1,7 @@
 import {RequestMock, t} from 'testcafe';
-import {commonUrl} from "./conf";
+import {commonApiUrl} from "./conf";
 
-const settingsApiUrl = `${commonUrl}/api/settings`;
+const settingsApiUrl = `${commonApiUrl}/api/settings`;
 
 const mockedSettingsResponse = {
     agreements: {

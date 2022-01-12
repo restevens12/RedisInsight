@@ -80,7 +80,8 @@ test('Verify that user can see HyperLogLog title in Command Helper for this comm
     //Check new opened window page with the correct URL
     await t.expect(getPageUrl()).contains('/pfcount');
 });
-test('Verify that user can see all separated groups for AI json file (model, tensor, inference, script)', async t => {
+//skipped due the Multi-window mode is supported in Chrome, Chromium, Edge 84+ and Firefox only
+test.skip('Verify that user can see all separated groups for AI json file (model, tensor, inference, script)', async t => {
     const AIGroups = [
         'Model',
         'Script',

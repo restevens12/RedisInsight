@@ -7,7 +7,7 @@ const settingsPage = new SettingsPage();
 const common = new Common();
 const userAgreementPage = new UserAgreementPage();
 
-fixture `Agreements Verification`
+fixture.only `Agreements Verification`
     .meta({ type: 'critical_path' })
     .page(commonUrl)
     .requestHooks(common.mock)
