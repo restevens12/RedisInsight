@@ -12,7 +12,7 @@ RUN npx yarn
 
 COPY . .
 
-RUN chmod +x wait-for-it.sh
+RUN chmod +x wait-for-redis.sh
 RUN chmod +x upload-custom-plugins.sh
 
 ENTRYPOINT ["npx", "yarn", "test:chrome:ci"]

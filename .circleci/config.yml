@@ -279,6 +279,13 @@ jobs:
             sudo cp -a ./redisinsight/api/. /usr/src/app/
             sudo cp -R /tmp/itest/coverages /usr/src/app && sudo chmod 777 -R /usr/src/app
             cd /usr/src/app && npx nyc report -t ./coverages -r text -r text-summary
+  e2e-linux:
+    executor: linux-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run: .circleci/scripts/e2e/e2e-linux.sh
   e2e-tests:
     executor: linux-executor
     parameters:

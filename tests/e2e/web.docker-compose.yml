@@ -20,11 +20,16 @@ services:
         'npx', 'yarn', 'test:chrome:ci'
     ]
 
+  # Redisinsight API + UI build
   app:
     cap_add:
       - ipc_lock
-    image: riv2:latest
     env_file:
       - ./.env
+    build:
+      context: ./../../
+      dockerfile: Dockerfile
     volumes:
       - ./plugins:/root/.redisinsight-preview/plugins
+    ports:
+      - 5000:5000
