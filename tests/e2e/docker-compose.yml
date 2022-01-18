@@ -15,7 +15,7 @@ services:
     depends_on:
       - oss-standalone
       - oss-standalone-v5
-#      - oss-standalone-redisearch
+      - oss-standalone-redisearch
       - oss-sentinel
       - oss-cluster
       - redis-enterprise
@@ -33,7 +33,7 @@ services:
 
   # oss standalone redisearch
   oss-standalone-redisearch:
-    image: redislabs/redisearch:edge
+    image: redislabs/redismod
     ports:
       - 8102:6379
 
