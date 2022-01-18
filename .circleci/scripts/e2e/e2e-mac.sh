@@ -2,12 +2,16 @@ yarn --cwd tests/e2e install
 
 # mount and copy app sources
 sudo hdiutil attach ./release/RedisInsight-preview-mac-x64.dmg
-sudo cp -R /Volumes/RedisInsight-preview-mac-x64/RedisInsight-preview.app /Applications
-sudo hdiutil unmount /Volumes/RedisInsight-preview-mac-x64/
+sudo cp -R /Volumes/RedisInsight-*/RedisInsight-preview.app /Applications
+sudo hdiutil unmount /Volumes/RedisInsight-*/
 
 # run rte
-docker-compose -f tests/e2e/docker-compose.yml create --force-recreate
-docker-compose -f tests/e2e/docker-compose.yml run init-rte && \
+docker run -d -p 8100:6379 redislabs/redismod
+docker run -d -p 8101:6379 redis:5
+docker run -d -p 8102:6379 redislabs/redismod
+docker run -d -p 8101:6379 redis:5
+#docker-compose -f tests/e2e/docker-compose.yml create --force-recreate
+#docker-compose -f tests/e2e/docker-compose.yml run init-rte && \
 
 # run tests
 COMMON_URL=/Applications/RedisInsight-preview.app/Contents/resources/app.asar/index.html \
