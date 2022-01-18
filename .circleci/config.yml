@@ -286,6 +286,22 @@ jobs:
       - attach_workspace:
           at: .
       - run: .circleci/scripts/e2e/e2e-linux.sh
+  e2e-win:
+    macos:
+      xcode: 11.3.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run: .circleci/scripts/e2e/e2e-win.cmd
+  e2e-mac:
+    executor:
+      name: win/default
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run: .circleci/scripts/e2e/e2e-mac.sh
   e2e-tests:
     executor: linux-executor
     parameters:
@@ -1002,3 +1018,41 @@ workflows:
           name: Build & release
           requires:
             - Approve guides release
+  # e2e POC
+  e2e-all:
+    jobs:
+      - setup-sign-certificates:
+          name: Setup certificates
+      - setup-build:
+          name: Setup build (dev)
+          env: dev
+          requires:
+            - Setup certificates
+      - linux:
+          name: Build app - Linux (dev)
+          requires: &setupBuildE2E
+            - Setup build (dev)
+      - e2e-linux:
+          name: E2E - Linux (dev)
+          requires:
+            - Build app - Linux (dev)
+      - macosx:
+          name: Build app - MacOS (dev)
+          requires: *setupBuildE2E
+      - e2e-mac:
+          name: E2E - Mac (dev)
+          requires:
+            - Build app - MacOS (dev)
+      - windows:
+          name: Build app - Windows (dev)
+          requires: *setupBuildE2E
+      - e2e-win:
+          name: E2E - Windows (dev)
+          requires:
+            - Build app - Windows (dev)
+      - store-build-artifacts:
+          name: Store build artifacts (dev)
+          requires:
+            - Build app - Linux (dev)
+            - Build app - MacOS (dev)
+            - Build app - Windows (dev)
