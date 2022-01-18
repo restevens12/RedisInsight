@@ -285,8 +285,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run: .circleci/scripts/e2e/e2e-linux.sh
   e2e-win:
     executor:
@@ -295,8 +293,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run: .circleci/scripts/e2e/e2e-win.cmd
   e2e-mac:
     macos:
@@ -305,8 +301,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - setup_remote_docker:
-          docker_layer_caching: true
       - run: .circleci/scripts/e2e/e2e-mac.sh
   e2e-tests:
     executor: linux-executor
