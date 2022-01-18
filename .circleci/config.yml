@@ -285,7 +285,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: choco install nodejs --version=15.14.0
       - run: .circleci/scripts/e2e/e2e-linux.sh
   e2e-win:
     executor:
@@ -294,6 +293,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - run: choco install nodejs --version=15.14.0
       - run: .circleci/scripts/e2e/e2e-win.cmd
   e2e-mac:
     macos:
