@@ -15,6 +15,6 @@ sudo hdiutil unmount /Volumes/RedisInsight-*/
 #docker-compose -f tests/e2e/docker-compose.yml run init-rte && \
 
 # run tests
-sudo COMMON_URL=/Applications/RedisInsight-preview.app/Contents/Resources/app.asar/index.html \
-ELECTRON_PATH=/Applications/RedisInsight-preview.app \
-yarn --cwd tests/e2e dotenv -e .desktop.env yarn --cwd tests/e2e test:desktop
+#sudo COMMON_URL=/Applications/RedisInsight-preview.app/Contents/Resources/app.asar/index.html \
+#ELECTRON_PATH=/Applications/RedisInsight-preview.app \
+#yarn --cwd tests/e2e dotenv -e .desktop.env yarn --cwd tests/e2e test:desktop
