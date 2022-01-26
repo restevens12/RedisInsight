@@ -1,9 +1,11 @@
 // Urls for using in the tests
-export const commonUrl = process.env.COMMON_URL || 'https://localhost:5000';
+//export const commonUrl = process.env.COMMON_URL || 'https://localhost:5000';
+export const commonUrl = process.env.COMMON_URL || 'C:/Users/Tatsiana Troyanova/AppData/Local/Programs/redisinsight/resources/app.asar/index.html';
+export const commonApiUrl = process.env.COMMON_URL || 'https://localhost:5001';
 
 export const ossStandaloneConfig = {
-    host: process.env.OSS_STANDALONE_HOST || 'oss-standalone',
-    port: process.env.OSS_STANDALONE_PORT || '6379',
+    host: process.env.OSS_STANDALONE_HOST || 'localhost',
+    port: process.env.OSS_STANDALONE_PORT || '8100',
     databaseName: process.env.OSS_STANDALONE_DATABASE_NAME || 'test_standalone',
     databaseUsername: process.env.OSS_STANDALONE_USERNAME,
     databasePassword: process.env.OSS_STANDALONE_PASSWORD
@@ -18,8 +20,8 @@ export const ossStandaloneV5Config = {
 };
 
 export const ossStandaloneRedisearch = {
-    host: process.env.OSS_STANDALONE_REDISEARCH_HOST || 'oss-standalone-redisearch',
-    port: process.env.OSS_STANDALONE_REDISEARCH_PORT || '6379',
+    host: process.env.OSS_STANDALONE_REDISEARCH_HOST || 'localhost',
+    port: process.env.OSS_STANDALONE_REDISEARCH_PORT || '8100',
     databaseName: process.env.OSS_STANDALONE_REDISEARCH_DATABASE_NAME || 'test_standalone-redisearch',
     databaseUsername: process.env.OSS_STANDALONE_REDISEARCH_USERNAME,
     databasePassword: process.env.OSS_STANDALONE_REDISEARCH_PASSWORD
