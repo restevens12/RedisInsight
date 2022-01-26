@@ -304,6 +304,8 @@ jobs:
           node-version: '15.14.0'
       - attach_workspace:
           at: .
+      - macos/add-safari-permissions
+      - macos/add-uitest-permissions
       - run: .circleci/scripts/e2e/e2e-mac.sh
   e2e-tests:
     executor: linux-executor
