@@ -297,7 +297,7 @@ jobs:
       - run: .circleci/scripts/e2e/e2e-win.cmd
   e2e-mac:
     macos:
-      xcode: 11.3.0
+      xcode: 13.2.1
     steps:
       - checkout
       - node/install:
@@ -472,7 +472,7 @@ jobs:
             - release/*-linux.yml
   macosx:
     macos:
-      xcode: 11.3.0
+      xcode: 13.2.1
     parameters:
       env:
         description: Build environment (stage || prod)
