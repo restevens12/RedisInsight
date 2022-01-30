@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { debounce } from 'lodash'
 import cx from 'classnames'
 import { EuiTextColor } from '@elastic/eui'
-import { CellMeasurer, List, CellMeasurerCache, ListRowProps, OnScrollParams } from 'react-virtualized'
+import { ListOnScrollProps, VariableSizeList as List } from 'react-window'
 
 import { getFormatTime } from 'uiSrc/utils'
 import { DEFAULT_TEXT } from 'uiSrc/components/notifications'
@@ -17,29 +17,31 @@ export interface Props {
   height: number
 }
 
-const cache = new CellMeasurerCache({
-  defaultHeight: 17,
-  fixedWidth: true,
-  fixedHeight: false
-})
-
 const PROTRUDING_OFFSET = 2
+const DEFAULT_ITEM_HEIGHT = 17
+const LETTER_WIDTH = 8.74
 
 const MonitorOutputList = (props: Props) => {
+  const listRef = useRef<any>(null)
   const { compressed, items = [], width = 0, height = 0 } = props
   const [autoScroll, setAutoScroll] = useState(true)
   const [, forceRender] = useState({})
 
-  const handleWheel = ({ clientHeight, scrollTop, scrollHeight }: OnScrollParams) => {
-    setAutoScroll(clientHeight + scrollTop >= scrollHeight)
+  const handleWheel = ({ scrollOffset }: ListOnScrollProps) => {
+    // TODO: setAutoScroll flag
+    // setAutoScroll(clientHeight + scrollOffset >= scrollHeight)
   }
 
   const updateWidth = debounce(() => {
-    cache.clearAll()
     setTimeout(() => {
+      updateItemsHeight()
       forceRender({})
     }, 0)
   }, 50, { maxWait: 100 })
+
+  const updateItemsHeight = debounce(() => {
+    listRef.current.resetAfterIndex(0, true)
+  }, 100, { maxWait: 100 })
 
   useEffect(() => {
     // function "handleWheel" after the first render rewrite initial state value "true"
@@ -50,6 +52,13 @@ const MonitorOutputList = (props: Props) => {
       globalThis.removeEventListener('resize', updateWidth)
     }
   }, [])
+
+  useEffect(() => {
+    if (listRef.current && autoScroll) {
+      listRef.current.scrollToItem(items.length - 1)
+    }
+    updateItemsHeight()
+  }, [items])
 
   useEffect(() => {
     updateWidth()
@@ -68,47 +77,45 @@ const MonitorOutputList = (props: Props) => {
     </span>
   )
 
-  const rowRenderer = ({ parent, index, key, style }: ListRowProps) => {
+  const getItemSize = (index: number, width: number): number => {
+    const { time = '', args = [], database = '', source = '' } = items[index]
+    const value = `${getFormatTime(time)} [${database} ${source}] "${args.join('" "')}"`
+
+    return DEFAULT_ITEM_HEIGHT * Math.ceil((value.length * LETTER_WIDTH) / width)
+  }
+
+  const Row = ({ index, style }: any) => {
     const { time = '', args = [], database = '', source = '', isError, message = '' } = items[index]
     return (
-      <CellMeasurer
-        cache={cache}
-        columnIndex={0}
-        key={key}
-        parent={parent}
-        rowIndex={index}
-      >
-        {({ registerChild }) => (
-          <div className={styles.item} ref={registerChild} style={style}>
-            {!isError && (
-              <>
-                <span>{getFormatTime(time)}</span>
-                <span>{`[${database} ${source}]`}</span>
-                <span>{getArgs(args)}</span>
-              </>
-            )}
-            {isError && (
-              <EuiTextColor color="danger">{message ?? DEFAULT_TEXT}</EuiTextColor>
-            )}
-          </div>
+      <div key={index} className={styles.item} style={style}>
+        {!isError && (
+          <>
+            <span>{getFormatTime(time)}</span>
+            <span>{`[${database} ${source}]`}</span>
+            <span>{getArgs(args)}</span>
+          </>
         )}
-      </CellMeasurer>
+        {isError && (
+          <EuiTextColor color="danger">{message ?? DEFAULT_TEXT}</EuiTextColor>
+        )}
+      </div>
     )
   }
 
   return (
     <List
+      ref={listRef}
       width={width - PROTRUDING_OFFSET}
       height={height - PROTRUDING_OFFSET}
-      rowCount={items.length}
-      rowHeight={cache.rowHeight}
-      rowRenderer={rowRenderer}
-      overscanRowCount={30}
-      className={styles.listWrapper}
-      deferredMeasurementCache={cache}
-      scrollToIndex={autoScroll ? items.length - 1 : undefined}
+      itemCount={items.length}
+      itemSize={(index: number) => getItemSize(index, width - PROTRUDING_OFFSET)}
+      overscanCount={30}
+      estimatedItemSize={DEFAULT_ITEM_HEIGHT}
+      className={['List', styles.listWrapper].join(' ')}
       onScroll={handleWheel}
-    />
+    >
+      {Row}
+    </List>
   )
 }
 

@@ -7,7 +7,7 @@ import {
   EuiTextColor,
   EuiToolTip,
 } from '@elastic/eui'
-import { AutoSizer } from 'react-virtualized'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 import { IMonitorDataPayload } from 'uiSrc/slices/interfaces'
 import MonitorOutputList from '../MonitorOutputList'
