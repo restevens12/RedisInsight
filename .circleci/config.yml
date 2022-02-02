@@ -282,11 +282,27 @@ jobs:
             cd /usr/src/app && npx nyc report -t ./coverages -r text -r text-summary
   e2e-linux:
     executor: linux-executor
+    parameters:
+      report:
+        description: Send report for test run to slack
+        type: boolean
+        default: false
     steps:
       - checkout
       - attach_workspace:
           at: .
       - run: .circleci/scripts/e2e/e2e-linux.sh
+      - when:
+          condition:
+            equal: [ true, << parameters.report >> ]
+          steps:
+            - run:
+                name: Send report
+                when: always
+                command: |
+                  APP_BUILD_TYPE="Electron (Linux)" node ./.circleci/e2e-results.js
+                  curl -H "Content-type: application/json" --data @e2e.report.json -H "Authorization: Bearer $SLACK_TEST_REPORT_KEY" -X POST https://slack.com/api/chat.postMessage
+
   e2e-win:
     executor:
       name: win/default
@@ -1040,25 +1056,26 @@ workflows:
             - Setup build (dev)
       - e2e-linux:
           name: E2E - Linux (dev)
+          report: true
           requires:
             - Build app - Linux (dev)
-      - macosx:
-          name: Build app - MacOS (dev)
-          requires: *setupBuildE2E
-      - e2e-mac:
-          name: E2E - Mac (dev)
-          requires:
-            - Build app - MacOS (dev)
-      - windows:
-          name: Build app - Windows (dev)
-          requires: *setupBuildE2E
-      - e2e-win:
-          name: E2E - Windows (dev)
-          requires:
-            - Build app - Windows (dev)
-      - store-build-artifacts:
-          name: Store build artifacts (dev)
-          requires:
-            - Build app - Linux (dev)
-            - Build app - MacOS (dev)
-            - Build app - Windows (dev)
+#      - macosx:
+#          name: Build app - MacOS (dev)
+#          requires: *setupBuildE2E
+#      - e2e-mac:
+#          name: E2E - Mac (dev)
+#          requires:
+#            - Build app - MacOS (dev)
+#      - windows:
+#          name: Build app - Windows (dev)
+#          requires: *setupBuildE2E
+#      - e2e-win:
+#          name: E2E - Windows (dev)
+#          requires:
+#            - Build app - Windows (dev)
+#      - store-build-artifacts:
+#          name: Store build artifacts (dev)
+#          requires:
+#            - Build app - Linux (dev)
+#            - Build app - MacOS (dev)
+#            - Build app - Windows (dev)
