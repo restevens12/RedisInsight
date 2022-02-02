@@ -44,7 +44,7 @@ services:
       - oss-sentinel-primary-1
       - oss-sentinel-primary-2
     ports:
-      - 28100:6379
+      - 28100:26379
   oss-sentinel-primary-1:
     image: redis:5
 
@@ -57,7 +57,7 @@ services:
     networks:
       - default
     ports:
-      - 8200:6379
+      - 8200:7000
 
   # redis enterprise
   redis-enterprise:
