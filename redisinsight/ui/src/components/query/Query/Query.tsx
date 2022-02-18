@@ -27,6 +27,13 @@ import { KeyboardShortcut } from 'uiSrc/components'
 import { ThemeContext } from 'uiSrc/contexts/themeContext'
 import { appRedisCommandsSelector } from 'uiSrc/slices/app/redis-commands'
 import { IEditorMount, ISnippetController } from 'uiSrc/pages/workbench/interfaces'
+import { getCypherCompletionProvider } from 'uiSrc/utils/monaco/cypher/completionProvider'
+import {
+  cypherDarkTheme,
+  cypherLanguageConfiguration,
+  cypherLightTheme
+} from 'uiSrc/constants/monaco/cypher'
+import { getCypherMonarchTokensProvider } from 'uiSrc/utils/monaco/cypher/monarchTokensProvider'
 
 import styles from './styles.module.scss'
 
@@ -162,25 +169,45 @@ const Query = (props: Props) => {
 
   const setupMonacoRedisLang = (monaco: typeof monacoEditor) => {
     const languages = monaco.languages.getLanguages()
-    const isRedisLangRegistered = findIndex(languages, { id: MonacoLanguage.Redis }) > -1
-    if (!isRedisLangRegistered) {
-      monaco.languages.register({ id: MonacoLanguage.Redis })
+    const isCypherLangRegistered = findIndex(languages, { id: MonacoLanguage.Cypher }) > -1
+    if (!isCypherLangRegistered) {
+      monaco.languages.register({ id: MonacoLanguage.Cypher })
     }
+
+    monaco.languages.setLanguageConfiguration(MonacoLanguage.Cypher, cypherLanguageConfiguration)
+
     disposeCompletionItemProvider = monaco.languages.registerCompletionItemProvider(
-      MonacoLanguage.Redis,
-      getRedisCompletionProvider(REDIS_COMMANDS_SPEC)
+      MonacoLanguage.Cypher,
+      getCypherCompletionProvider()
     ).dispose
 
-    disposeSignatureHelpProvider = monaco.languages.registerSignatureHelpProvider(
-      MonacoLanguage.Redis,
-      getRedisSignatureHelpProvider(REDIS_COMMANDS_SPEC, REDIS_COMMANDS_ARRAY)
-    ).dispose
-
-    monaco.languages.setLanguageConfiguration(MonacoLanguage.Redis, redisLanguageConfig)
     monaco.languages.setMonarchTokensProvider(
-      MonacoLanguage.Redis,
-      getRedisMonarchTokensProvider(REDIS_COMMANDS_ARRAY)
+      MonacoLanguage.Cypher,
+      getCypherMonarchTokensProvider()
     )
+
+    monaco.editor.defineTheme('cypher-dark', cypherDarkTheme)
+    monaco.editor.defineTheme('cypher-light', cypherLightTheme)
+
+    // const isRedisLangRegistered = findIndex(languages, { id: MonacoLanguage.Redis }) > -1
+    // if (!isRedisLangRegistered) {
+    //   monaco.languages.register({ id: MonacoLanguage.Redis })
+    // }
+    // disposeCompletionItemProvider = monaco.languages.registerCompletionItemProvider(
+    //   MonacoLanguage.Redis,
+    //   getRedisCompletionProvider(REDIS_COMMANDS_SPEC)
+    // ).dispose
+    //
+    // disposeSignatureHelpProvider = monaco.languages.registerSignatureHelpProvider(
+    //   MonacoLanguage.Redis,
+    //   getRedisSignatureHelpProvider(REDIS_COMMANDS_SPEC, REDIS_COMMANDS_ARRAY)
+    // ).dispose
+    //
+    // monaco.languages.setLanguageConfiguration(MonacoLanguage.Redis, redisLanguageConfig)
+    // monaco.languages.setMonarchTokensProvider(
+    //   MonacoLanguage.Redis,
+    //   getRedisMonarchTokensProvider(REDIS_COMMANDS_ARRAY)
+    // )
   }
 
   const options: monacoEditor.editor.IStandaloneEditorConstructionOptions = {
@@ -193,7 +220,7 @@ const Query = (props: Props) => {
     suggest: {
       preview: true,
       showStatusBar: true,
-      showIcons: false,
+      showIcons: true,
     },
     lineNumbersMinChars: 4
   }
@@ -202,11 +229,11 @@ const Query = (props: Props) => {
     <div className={styles.container} onKeyDown={handleKeyDown} role="textbox" tabIndex={0}>
       <div className={styles.input} data-testid="query-input-container">
         <MonacoEditor
-          language={MonacoLanguage.Redis}
-          theme={theme === Theme.Dark ? 'vs-dark' : 'vs-light'}
+          language={MonacoLanguage.Cypher}
+          theme={theme === Theme.Dark ? 'cypher-dark' : 'cypher-light'}
           value={query}
           options={options}
-          className={`${MonacoLanguage.Redis}-editor`}
+          className={`${MonacoLanguage.Cypher}-editor`}
           onChange={onChange}
           editorDidMount={editorDidMount}
         />
