@@ -186,9 +186,6 @@ const Query = (props: Props) => {
       getCypherMonarchTokensProvider()
     )
 
-    monaco.editor.defineTheme('cypher-dark', cypherDarkTheme)
-    monaco.editor.defineTheme('cypher-light', cypherLightTheme)
-
     // const isRedisLangRegistered = findIndex(languages, { id: MonacoLanguage.Redis }) > -1
     // if (!isRedisLangRegistered) {
     //   monaco.languages.register({ id: MonacoLanguage.Redis })
@@ -224,6 +221,9 @@ const Query = (props: Props) => {
     },
     lineNumbersMinChars: 4
   }
+
+  monaco.editor.defineTheme('cypher-dark', cypherDarkTheme)
+  monaco.editor.defineTheme('cypher-light', cypherLightTheme)
 
   return (
     <div className={styles.container} onKeyDown={handleKeyDown} role="textbox" tabIndex={0}>
