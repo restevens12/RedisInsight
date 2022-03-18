@@ -51,11 +51,11 @@ export class MonitorPage {
     async checkCommandInMonitorResults(command: string, parameters?: string[]): Promise<void> {
         const commandArray = command.split(' ');
         for (const value of commandArray) {
-            await t.expect(this.monitorCommandLinePart.withText(value).exists).ok({timeout: 6000});
+            await t.expect(await this.monitorCommandLinePart.withText(value).exists).ok({timeout: 6000});
         }
         if (!!parameters) {
             for (const argument of parameters) {
-                await t.expect(this.monitorCommandLinePart.withText(argument).exists).ok({timeout: 6000});
+                await t.expect(await this.monitorCommandLinePart.withText(argument).exists).ok({timeout: 6000});
             }
         }
     }

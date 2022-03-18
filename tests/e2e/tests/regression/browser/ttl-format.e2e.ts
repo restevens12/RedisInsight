@@ -1,16 +1,19 @@
 import { Selector } from 'testcafe';
 import { acceptLicenseTermsAndAddDatabase, deleteDatabase } from '../../../helpers/database';
-import { keyTypes, getRandomKeyName } from '../../../helpers/keys';
+import { keyTypes } from '../../../helpers/keys';
 import { rte } from '../../../helpers/constants';
 import { COMMANDS_TO_CREATE_KEY, keyLength } from '../../../helpers/constants';
 import { BrowserPage, CliPage } from '../../../pageObjects';
 import { commonUrl, ossStandaloneConfig } from '../../../helpers/conf';
+import { Chance } from 'chance';
 
 const browserPage = new BrowserPage();
 const cliPage = new CliPage();
+const chance = new Chance();
+
 const keysData = keyTypes.slice(0, 6);
 for (const key of keysData) {
-    key.keyName = `${key.keyName}` + '-' + `${getRandomKeyName(keyLength)}`
+    key.keyName = `${key.keyName}` + '-' + `${chance.word({ length: 10 })}`
 }
 //Arrays with TTL in seconds, min, hours, days, months, years and their values in Browser Page
 const ttlForSet = [59, 800, 20000, 2000000, 31000000, 2147483647];
@@ -46,6 +49,6 @@ test
         //Check that Keys has correct TTL value in keys table
         for (let i = 0; i < keysData.length; i++) {
             const ttlValueElement = Selector(`[data-testid="ttl-${keysData[i].keyName}"]`);
-            await t.expect(ttlValueElement.textContent).contains(ttlValues[i], 'TTL value in keys table');
+            await t.expect(ttlValueElement.textContent).contains(ttlValues[i], `TTL value in keys table is ${ttlValues}`);
         }
     });
