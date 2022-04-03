@@ -335,9 +335,12 @@ jobs:
 #      - run: choco install nodejs --version=15.14.0
       - run:
           command: |
+            export TEST2=t2t2t2t2
             set TEST="tttt"
             echo %TEST_FILES%
             echo %TEST%
+            echo TEST
+            echo TEST2
 #            .circleci/scripts/e2e/exe.e2e.cmd
       - when:
           condition:
