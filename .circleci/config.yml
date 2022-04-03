@@ -332,11 +332,13 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: choco install nodejs --version=15.14.0
+#      - run: choco install nodejs --version=15.14.0
       - run:
           command: |
+            set TEST="tttt"
             echo %TEST_FILES%
-            .circleci/scripts/e2e/exe.e2e.cmd
+            echo %TEST%
+#            .circleci/scripts/e2e/exe.e2e.cmd
       - when:
           condition:
             equal: [ true, << parameters.report >> ]
