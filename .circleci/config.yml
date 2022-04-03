@@ -339,8 +339,8 @@ jobs:
 #            export TEST2=t2t2t2t2
             echo %TEST_FILES%
             echo %TEST%
-            echo $TEST
-            echo $TEST2
+#            echo $TEST
+#            echo $TEST2
 #            .circleci/scripts/e2e/exe.e2e.cmd
       - when:
           condition:
