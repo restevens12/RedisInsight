@@ -876,7 +876,7 @@ workflows:
           name: Build app - Windows (stage)
           requires:
             - Setup build (stage)
-       e2e desktop tests on AppImage build
+      # e2e desktop tests on AppImage build
       - e2e-app-image:
           name: E2ETest (AppImage) - Nightly
           parallelism: 4
