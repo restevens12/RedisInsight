@@ -335,8 +335,8 @@ jobs:
 #      - run: choco install nodejs --version=15.14.0
       - run:
           command: |
-#            export TEST2=t2t2t2t2
             set TEST="tttt"
+#            export TEST2=t2t2t2t2
             echo %TEST_FILES%
             echo %TEST%
             echo $TEST
