@@ -340,7 +340,11 @@ jobs:
             echo %TEST%
             echo $TEST
             echo $TEST2
+            cd tests/e2e && export TEST_FILES=$(circleci tests glob "tests/**/*.e2e.ts" | circleci tests split) && cd ../..
+            echo $TEST_FILES
+            echo %TEST_FILES%
 #            .circleci/scripts/e2e/exe.e2e.cmd
+          shell: bash.exe
       - when:
           condition:
             equal: [ true, << parameters.report >> ]
