@@ -25,7 +25,9 @@ test
     })
     ('Verify that when users open application for the first time, they can see all auto-discovered Standalone DBs', async t => {
         // Check that standalone DBs have been added into the application
+        await t.wait(10000);
         const n = await myRedisDatabasePage.dbNameList.count;
+        console.log(`n: ${n}`);
         for(let k = 0; k < n; k++) {
             const name = await myRedisDatabasePage.dbNameList.nth(k).textContent;
             console.log(`AUTODISCOVERY ${k}: ${name}`);
