@@ -298,7 +298,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: apt-get install net-tools
+      - run: apt-get install net-tools -y
       - run:
           name: .AppImage tests
           command: |
@@ -1167,20 +1167,20 @@ workflows:
   custom_e2e:
     jobs:
       # build desktop app
-      - setup-sign-certificates:
-          name: Setup sign certificates (stage)
-          filters:
-            branches:
-              only:
-                - /^custom-e2e.*/
-      - setup-build:
-          name: Setup build (stage)
-          requires:
-            - Setup sign certificates (stage)
-      - linux:
-          name: Build app - Linux (stage)
-          requires:
-            - Setup build (stage)
+#      - setup-sign-certificates:
+#          name: Setup sign certificates (stage)
+#          filters:
+#            branches:
+#              only:
+#                - /^custom-e2e.*/
+#      - setup-build:
+#          name: Setup build (stage)
+#          requires:
+#            - Setup sign certificates (stage)
+#      - linux:
+#          name: Build app - Linux (stage)
+#          requires:
+#            - Setup build (stage)
 #      - windows:
 #          name: Build app - Windows (stage)
 #          requires:
@@ -1190,8 +1190,8 @@ workflows:
           name: E2ETest (AppImage) - Nightly
           parallelism: 1
           report: false
-          requires:
-            - Build app - Linux (stage)
+#          requires:
+#            - Build app - Linux (stage)
 #      # e2e desktop tests on exe build
 #      - e2e-exe:
 #          name: E2ETest (exe) - Nightly
