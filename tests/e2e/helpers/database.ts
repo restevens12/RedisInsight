@@ -28,7 +28,12 @@ export async function addNewStandaloneDatabase(databaseParameters: AddNewDatabas
     //Click for saving
     await t.click(addRedisDatabasePage.addRedisDatabaseButton);
     //Wait for database to be exist
-    await t.expect(addRedisDatabasePage.errorMessage.exists).notOk(`The error message is not displyed after add the ${databaseParameters.databaseName}`);
+    // Check error message
+    // const error = Selector('[data-testid=toast-error]');
+    // if (await error.exists) {
+    //     const messageText = await error.find('span').textContent;
+    //     console.log(`Error message: ${messageText}`);
+    // }
     await t.expect(myRedisDatabasePage.dbNameList.withExactText(databaseParameters.databaseName).exists).ok('The existence of the database', { timeout: 10000 });
     //Close message
     await t.click(myRedisDatabasePage.toastCloseButton);
