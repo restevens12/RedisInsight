@@ -31,9 +31,7 @@ const MonitorLog = () => {
   const isElectron = process.env.APP_ENV === AppEnv.ELECTRON
 
   const downloadBtnProps: any = {}
-  if (isElectron) {
-    downloadBtnProps.download = true
-  } else {
+  if (!isElectron) {
     downloadBtnProps.target = '_blank'
   }
 
