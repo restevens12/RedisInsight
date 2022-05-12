@@ -1,8 +1,8 @@
+import { Chance } from 'chance';
 import { rte } from '../../../helpers/constants';
 import { acceptLicenseTermsAndAddDatabase, deleteDatabase } from '../../../helpers/database';
 import { BrowserPage } from '../../../pageObjects';
 import { commonUrl, ossStandaloneConfig } from '../../../helpers/conf';
-import { Chance } from 'chance';
 
 const browserPage = new BrowserPage();
 const chance = new Chance();
@@ -15,17 +15,16 @@ const keyValue = 'hashValue11111!';
 fixture `Hash Key fields verification`
     .meta({ type: 'critical_path' })
     .page(commonUrl)
-    .beforeEach(async () => {
+    .beforeEach(async() => {
         await acceptLicenseTermsAndAddDatabase(ossStandaloneConfig, ossStandaloneConfig.databaseName);
     })
-    .afterEach(async () => {
+    .afterEach(async() => {
         //Clear and delete database
         await browserPage.deleteKeyByName(keyName);
         await deleteDatabase(ossStandaloneConfig.databaseName);
-    })
+    });
 test
-    .meta({ rte: rte.standalone })
-    ('Verify that user can search by full field name in Hash', async t => {
+    .meta({ rte: rte.standalone })('Verify that user can search by full field name in Hash', async t => {
         keyName = keyName = chance.word({ length: 10 });
         await browserPage.addHashKey(keyName, keyTTL);
         //Add field to the hash key
@@ -37,8 +36,7 @@ test
         await t.expect(result).eql(keyFieldValue, 'The hash field');
     });
 test
-    .meta({ rte: rte.standalone })
-    ('Verify that user can search by part field name in Hash with pattern * in Hash', async t => {
+    .meta({ rte: rte.standalone })('Verify that user can search by part field name in Hash with pattern * in Hash', async t => {
         keyName = chance.word({ length: 10 });
         await browserPage.addHashKey(keyName, keyTTL);
         //Add field to the hash key
