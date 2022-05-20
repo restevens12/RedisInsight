@@ -13,6 +13,7 @@ import {
   streamSelector,
   streamRangeSelector,
 } from 'uiSrc/slices/browser/stream'
+import { connectedInstanceSelector } from 'uiSrc/slices/instances/instances'
 import VirtualTable from 'uiSrc/components/virtual-table/VirtualTable'
 import { ITableColumn } from 'uiSrc/components/virtual-table/interfaces'
 import RangeFilter from 'uiSrc/components/range-filter/RangeFilter'
@@ -20,6 +21,7 @@ import { selectedKeyDataSelector } from 'uiSrc/slices/browser/keys'
 import { SCAN_COUNT_DEFAULT } from 'uiSrc/constants/api'
 import { SortOrder } from 'uiSrc/constants'
 import { getTimestampFromId } from 'uiSrc/utils/streamUtils'
+import { sendEventTelemetry, TelemetryEvent } from 'uiSrc/telemetry'
 import { StreamEntryDto } from 'apiSrc/modules/browser/dto/stream.dto'
 
 import styles from './styles.module.scss'
@@ -55,6 +57,7 @@ const StreamDetails = (props: Props) => {
     lastEntry,
   } = useSelector(streamDataSelector)
   const { name: key } = useSelector(selectedKeyDataSelector) ?? { name: '' }
+  const { id: instanceId } = useSelector(connectedInstanceSelector)
 
   const shouldFilterRender = !isNull(firstEntry) && (firstEntry.id !== '') && !isNull(lastEntry) && lastEntry.id !== ''
 
@@ -111,6 +114,21 @@ const StreamDetails = (props: Props) => {
     []
   )
 
+  const handleResetFilter = useCallback(
+    () => {
+      dispatch(updateStart(firstEntryTimeStamp.toString()))
+      dispatch(updateEnd(lastEntryTimeStamp.toString()))
+      sendEventTelemetry({
+        event: TelemetryEvent.STREAM_DATA_FILTER_RESET,
+        eventData: {
+          databaseId: instanceId,
+          total,
+        }
+      })
+    },
+    []
+  )
+
   const firstEntryTimeStamp = useMemo(() => getTimestampFromId(firstEntry?.id), [firstEntry?.id])
   const lastEntryTimeStamp = useMemo(() => getTimestampFromId(lastEntry?.id), [lastEntry?.id])
 
@@ -150,6 +168,7 @@ const StreamDetails = (props: Props) => {
           end={endNumber}
           handleChangeStart={handleChangeStartFilter}
           handleChangeEnd={handleChangeEndFilter}
+          handleReset={handleResetFilter}
         />
       )
         : (

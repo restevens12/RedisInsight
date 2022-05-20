@@ -14,6 +14,7 @@ export interface Props {
   end: number
   handleChangeStart: (value: number) => void
   handleChangeEnd: (value: number) => void
+  handleReset: () => void
 }
 
 function usePrevious(value: any) {
@@ -25,7 +26,7 @@ function usePrevious(value: any) {
 }
 
 const RangeFilter = (props: Props) => {
-  const { max, min, start, end, handleChangeStart, handleChangeEnd } = props
+  const { max, min, start, end, handleChangeStart, handleChangeEnd, handleReset } = props
 
   const [startVal, setStartVal] = useState(start)
   const [endVal, setEndVal] = useState(end)
@@ -40,14 +41,6 @@ const RangeFilter = (props: Props) => {
   const range = useRef<HTMLInputElement>(null)
 
   const prevValue = usePrevious({ max }) ?? { max: 0 }
-
-  const resetFilter = useCallback(
-    () => {
-      handleChangeStart(min)
-      handleChangeEnd(max)
-    },
-    [min, max]
-  )
 
   const onChangeStart = useCallback(
     ({ target: { value } }) => {
@@ -171,7 +164,7 @@ const RangeFilter = (props: Props) => {
           data-testid="range-filter-btn"
           className={styles.resetButton}
           type="button"
-          onClick={resetFilter}
+          onClick={handleReset}
         >
           {buttonString}
         </button>
