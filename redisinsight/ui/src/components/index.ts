@@ -17,6 +17,7 @@ import ShortcutsFlyout from './shortcuts-flyout/ShortcutsFlyout'
 import MonitorConfig from './monitor-config'
 import MonitorWrapper from './monitor'
 import PagePlaceholder from './page-placeholder'
+import VirtualTableGrid from './virtual-table-grid'
 
 export {
   NavigationMenu,
@@ -39,4 +40,5 @@ export {
   MonitorWrapper,
   ShortcutsFlyout,
   PagePlaceholder,
+  VirtualTableGrid,
 }

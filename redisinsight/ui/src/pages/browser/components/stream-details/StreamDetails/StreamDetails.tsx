@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { last, isNull } from 'lodash'
+import { last, isNull, map } from 'lodash'
 import cx from 'classnames'
 import { EuiButtonIcon, EuiProgress } from '@elastic/eui'
+import { GridCellProps } from 'react-virtualized'
 
 import {
   fetchMoreStreamEntries,
@@ -11,13 +12,13 @@ import {
   streamSelector,
   streamRangeSelector,
 } from 'uiSrc/slices/browser/stream'
-import VirtualTable from 'uiSrc/components/virtual-table/VirtualTable'
 import { ITableColumn } from 'uiSrc/components/virtual-table/interfaces'
 import { selectedKeyDataSelector } from 'uiSrc/slices/browser/keys'
 import { SCAN_COUNT_DEFAULT } from 'uiSrc/constants/api'
 import { SortOrder } from 'uiSrc/constants'
 import { getTimestampFromId } from 'uiSrc/utils/streamUtils'
 import { StreamEntryDto } from 'apiSrc/modules/browser/dto/stream.dto'
+import { VirtualTableGrid } from 'uiSrc/components'
 import StreamRangeFilter from './StreamRangeFilter'
 
 import styles from './styles.module.scss'
@@ -95,6 +96,17 @@ const StreamDetails = (props: Props) => {
     dispatch(fetchStreamEntries(key, SCAN_COUNT_DEFAULT, order))
   }
 
+  const GridColumn = ({ rowIndex, columnIndex, style }: GridCellProps) => {
+    const fieldId = columns[columnIndex]?.id
+
+    return (
+      <div className="sticky-grid__data__column" style={style}>
+        {/* {fieldId !== 'actions' ? entries[rowIndex]?.fields?.[fieldId] : '' } */}
+        {columns?.[columnIndex + 1]?.render?.(entries[rowIndex]?.fields?.[fieldId], entries[rowIndex]) }
+      </div>
+    )
+  }
+
   return (
     <>
       {shouldFilterRender ? (
@@ -125,7 +137,7 @@ const StreamDetails = (props: Props) => {
         {/* <div className={styles.columnManager}>
           <EuiButtonIcon iconType="boxesVertical" aria-label="manage columns" />
         </div> */}
-        <VirtualTable
+        {/* <VirtualTable
           hideProgress
           selectable={false}
           keyName={key}
@@ -145,7 +157,21 @@ const StreamDetails = (props: Props) => {
             column: sortedColumnName,
             order: sortedColumnOrder,
           } : undefined}
-        />
+        /> */}
+        <VirtualTableGrid
+          columnCount={columns.length - 1}
+          rowCount={entries.length}
+          rowHeight={30}
+          columnWidth={minColumnWidth}
+          stickyHeight={50}
+          totalItemsCount={total}
+          stickyWidth={minColumnWidth}
+          loadMoreItems={loadMoreItems}
+          columns={columns}
+          firstColumnData={map(entries, 'id')}
+        >
+          {GridColumn}
+        </VirtualTableGrid>
       </div>
     </>
   )
